@@ -1,21 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:i12_into_012/models/app_state.dart';
 import 'package:i12_into_012/models/todo.dart';
+import 'package:i12_into_012/providers/local_json_notifier.dart';
 import 'package:i12_into_012/services/storage_service.dart';
 
-// Storage service provider
-final storageServiceProvider = Provider<StorageService>((ref) {
-  return StorageService();
+// App state notifier provider
+final appStateProvider = NotifierProvider<AppStateNotifier, AppState>(() {
+  return LocalJsonNotifier();
 });
 
-// App state notifier provider
-final appStateProvider = NotifierProvider<AppStateNotifier, AppState>(
-  AppStateNotifier.new,
-);
-
-// Derived providers for convenience
-final todosProvider = Provider<List<Todo>>((ref) {
-  return ref.watch(appStateProvider).todos;
+final hasSelectedTodosProvider = Provider<bool>((ref) {
+  return ref.watch(selectedTodosProvider).isNotEmpty;
 });
 
 final isDarkModeProvider = Provider<bool>((ref) {
@@ -26,112 +21,42 @@ final selectedTodosProvider = Provider<Set<String>>((ref) {
   return ref.watch(appStateProvider).selectedTodoIds;
 });
 
-final hasSelectedTodosProvider = Provider<bool>((ref) {
-  return ref.watch(selectedTodosProvider).isNotEmpty;
+// Storage service provider
+final storageServiceProvider = Provider<StorageService>((ref) {
+  return StorageService();
 });
 
-class AppStateNotifier extends Notifier<AppState> {
-  final _storageService = StorageService();
+// Derived providers for convenience
+final todosProvider = Provider<List<Todo>>((ref) {
+  return ref.watch(appStateProvider).todos;
+});
 
-  void addTodo(String text) {
-    if (text.trim().isEmpty) return;
+abstract class AppStateNotifier extends Notifier<AppState> {
+  Future<Todo?> addTodo(Todo todo);
 
-    final newTodo = Todo(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      text: text.trim(),
-    );
+  Future<List<Todo>?> addTodos(List<Todo> todos);
 
-    state = state.copyWith(
-      todos: [...state.todos, newTodo],
-    );
+  void clearSelection();
 
-    saveState();
-  }
+  Future<int?> deleteCompletedTodos();
 
-  void toggleTodo(String id) {
-    state = state.copyWith(
-      todos: state.todos.map((todo) {
-        if (todo.id == id) {
-          return todo.copyWith(isCompleted: !todo.isCompleted);
-        }
-        return todo;
-      }).toList(),
-    );
+  Future<void> deleteSelectedTodos();
 
-    saveState();
-  }
+  Future<int?> deleteTodo(Todo todo);
 
-  void toggleDarkMode() {
-    state = state.copyWith(isDarkMode: !state.isDarkMode);
+  Future<int?> deleteTodos(List<Todo> todos);
 
-    saveState();
-  }
+  Future<void> loadState();
 
-  void toggleDeletionConfirmation() {
-    state = state.copyWith(
-      asksForDeletionConfirmation: !state.asksForDeletionConfirmation,
-    );
-    saveState();
-  }
+  Future<void> saveState();
 
-  void toggleSelection(String id) {
-    final selectedIds = Set<String>.from(state.selectedTodoIds);
-    if (selectedIds.contains(id)) {
-      selectedIds.remove(id);
-    } else {
-      selectedIds.add(id);
-    }
+  Future<bool?> setDarkMode(bool isDarkMode);
 
-    state = state.copyWith(selectedTodoIds: selectedIds);
-  }
+  void toggleDeletionConfirmation();
 
-  void clearSelection() {
-    state = state.copyWith(selectedTodoIds: {});
-  }
+  void toggleSelection(String id);
 
-  Future<void> deleteSelectedTodos() async {
-    if (state.selectedTodoIds.isEmpty) return;
+  Future<bool?> toggleTodoCompletion(Todo todo);
 
-    final remainingTodos = state.todos
-        .where((todo) => !state.selectedTodoIds.contains(todo.id))
-        .toList();
-
-    state = state.copyWith(
-      todos: remainingTodos,
-      selectedTodoIds: {},
-    );
-
-    saveState();
-  }
-
-  Future<void> loadState() async {
-    try {
-      final appState = await _storageService.loadAppState();
-      if (appState != null) {
-        state = appState;
-      }
-    } catch (e) {
-      // Handle error or use default state
-      print('Error loading state: $e');
-    }
-  }
-
-  Future<void> saveState() async {
-    try {
-      await _storageService.saveAppState(state);
-    } catch (e) {
-      print('Error saving state: $e');
-    }
-  }
-
-  @override
-  AppState build() {
-    Future.microtask(loadState);
-
-    return AppState(
-      todos: [],
-      isDarkMode: true,
-      asksForDeletionConfirmation: true,
-    );
-  }
+  Future<Todo?> updateTodo(Todo todo);
 }
