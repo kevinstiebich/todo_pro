@@ -56,7 +56,7 @@ class TodoItem extends ConsumerWidget {
                             onChanged: (bool? value) {
                               ref
                                   .read(appStateProvider.notifier)
-                                  .toggleTodo(todo.id);
+                                  .setTodoCompleted(todo, !todo.isCompleted);
                             },
                           ),
                         ),

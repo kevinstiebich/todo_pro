@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:i12_into_012/models/todo.dart';
 import 'package:i12_into_012/providers/app_state_provider.dart';
 
 class AddTodoDialog extends ConsumerWidget {
@@ -23,7 +24,9 @@ class AddTodoDialog extends ConsumerWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            ref.read(appStateProvider.notifier).addTodo(textController.text);
+            ref
+                .read(appStateProvider.notifier)
+                .addTodo(Todo(text: textController.text));
             Navigator.pop(context);
           },
           child: const Text('Add'),

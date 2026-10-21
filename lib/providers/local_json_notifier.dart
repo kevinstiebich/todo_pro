@@ -127,7 +127,7 @@ class LocalJsonNotifier extends AppStateNotifier {
       if (t.id == todo.id) {
         return todo.copyWith(isCompleted: isCompleted);
       }
-      return todo;
+      return t;
     }).toList();
     state = state.copyWith(todos: newTodos);
     await _saveState();

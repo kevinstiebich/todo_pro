@@ -27,7 +27,9 @@ class TodoListScreen extends ConsumerWidget {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: const Text('Are you sure?'),
+                      title: const Text(
+                        'Do you want to delete the selected (orange highlighted), or completed ToDos?',
+                      ),
                       actions: [
                         TextButton(
                           onPressed: () {
@@ -42,7 +44,16 @@ class TodoListScreen extends ConsumerWidget {
                                 .deleteSelectedTodos();
                             Navigator.pop(context);
                           },
-                          child: const Text('Delete'),
+                          child: const Text('Delete selected ToDos'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            ref
+                                .read(appStateProvider.notifier)
+                                .deleteCompletedTodos();
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Delete completed ToDos'),
                         ),
                       ],
                     );

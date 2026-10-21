@@ -28,7 +28,7 @@ class SettingsScreen extends ConsumerWidget {
             title: const Text('Dark Mode'),
             value: isDarkMode,
             onChanged: (bool value) {
-              ref.read(appStateProvider.notifier).toggleDarkMode();
+              ref.read(appStateProvider.notifier).setDarkMode(isDarkMode);
             },
           ),
 
