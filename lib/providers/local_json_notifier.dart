@@ -11,33 +11,134 @@ class LocalJsonNotifier extends AppStateNotifier {
       todos: [...state.todos, todo],
     );
 
-    await saveState();
+    await _saveState();
+    return todo;
   }
 
-  void toggleTodo(String id) {
+  @override
+  Future<List<Todo>?> addTodos(List<Todo> todos) async {
+    final added = <Todo>[];
+    for (final todo in todos) {
+      final result = await addTodo(todo);
+      if (result != null) {
+        added.add(result);
+      }
+    }
+    await _saveState();
+    return added;
+  }
+
+  @override
+  AppState build() {
+    // Future.microtask = Überholspur, direkt nach dem Code, aber vor allen anderen Futures
+    Future.microtask(_loadState);
+
+    return AppState(
+      todos: [],
+      isDarkMode: true,
+      asksForDeletionConfirmation: true,
+    );
+  }
+
+  void clearSelection() {
+    state = state.copyWith(selectedTodoIds: {});
+  }
+
+  @override
+  Future<int?> deleteCompletedTodos() async {
+    final oldLength = state.todos.length;
+    final newTodos = state.todos.where((todo) => !todo.isCompleted).toList();
+    final newLength = newTodos.length;
+    state = state.copyWith(todos: newTodos);
+    await _saveState();
+    return oldLength - newLength;
+  }
+
+  Future<int?> deleteSelectedTodos() async {
+    if (state.selectedTodoIds.isEmpty) return 0;
+
+    final oldLength = state.selectedTodoIds.length;
+    final remainingTodos = state.todos
+        .where((todo) => !state.selectedTodoIds.contains(todo.id))
+        .toList();
+    final newLength = remainingTodos.length;
+
     state = state.copyWith(
-      todos: state.todos.map((todo) {
-        if (todo.id == id) {
-          return todo.copyWith(isCompleted: !todo.isCompleted);
-        }
-        return todo;
-      }).toList(),
+      todos: remainingTodos,
+      selectedTodoIds: {},
     );
 
-    saveState();
+    await _saveState();
+    return oldLength - newLength;
   }
 
-  Future<bool?> setDarkMode() {
-    state = state.copyWith(isDarkMode: !state.isDarkMode);
+  @override
+  Future<int?> deleteTodo(Todo todo) async {
+    final oldLength = state.todos.length;
+    final newTodos = state.todos.where((t) => t.id != todo.id).toList();
+    final newLength = newTodos.length;
+    state = state.copyWith(todos: newTodos);
+    await _saveState();
+    return oldLength - newLength;
+  }
 
-    saveState();
+  @override
+  Future<int?> deleteTodos(List<Todo> todos) async {
+    final todoIds = todos.map((t) => t.id).toList();
+    final oldLength = state.todos.length;
+    final newTodos = state.todos.where((t) => !todoIds.contains(t.id)).toList();
+    final newLength = newTodos.length;
+    state = state.copyWith(todos: newTodos);
+    await _saveState();
+    return oldLength - newLength;
+  }
+
+  Future<void> _loadState() async {
+    try {
+      final appState = await _storageService.loadAppState();
+      if (appState != null) {
+        state = appState;
+      }
+    } catch (e) {
+      // Handle error or use default state
+      print('Error loading state: $e');
+    }
+  }
+
+  Future<void> _saveState() async {
+    try {
+      await _storageService.saveAppState(state);
+    } catch (e) {
+      print('Error saving state: $e');
+    }
+  }
+
+  @override
+  Future<bool?> setDarkMode(bool isDarkMode) async {
+    state = state.copyWith(isDarkMode: isDarkMode);
+
+    _saveState();
+    return isDarkMode;
+  }
+
+  @override
+  Future<bool?> setTodoCompleted(Todo todo, bool isCompleted) async {
+    final newTodos = state.todos.map((t) {
+      if (t.id == todo.id) {
+        return todo.copyWith(isCompleted: isCompleted);
+      }
+      return todo;
+    }).toList();
+    state = state.copyWith(todos: newTodos);
+    await _saveState();
+    return isCompleted;
   }
 
   void toggleDeletionConfirmation() {
     state = state.copyWith(
       asksForDeletionConfirmation: !state.asksForDeletionConfirmation,
     );
-    saveState();
+    _saveState();
   }
 
   void toggleSelection(String id) {
@@ -51,102 +152,26 @@ class LocalJsonNotifier extends AppStateNotifier {
     state = state.copyWith(selectedTodoIds: selectedIds);
   }
 
-  void clearSelection() {
-    state = state.copyWith(selectedTodoIds: {});
-  }
-
-  Future<void> deleteSelectedTodos() async {
-    if (state.selectedTodoIds.isEmpty) return;
-
-    final remainingTodos = state.todos
-        .where((todo) => !state.selectedTodoIds.contains(todo.id))
-        .toList();
-
+  void toggleTodo(String id) {
     state = state.copyWith(
-      todos: remainingTodos,
-      selectedTodoIds: {},
+      todos: state.todos.map((todo) {
+        if (todo.id == id) {
+          return todo.copyWith(isCompleted: !todo.isCompleted);
+        }
+        return todo;
+      }).toList(),
     );
 
-    saveState();
-  }
-
-  Future<void> loadState() async {
-    try {
-      final appState = await _storageService.loadAppState();
-      if (appState != null) {
-        state = appState;
-      }
-    } catch (e) {
-      // Handle error or use default state
-      print('Error loading state: $e');
-    }
-  }
-
-  Future<void> saveState() async {
-    try {
-      await _storageService.saveAppState(state);
-    } catch (e) {
-      print('Error saving state: $e');
-    }
+    _saveState();
   }
 
   @override
-  AppState build() {
-    Future.microtask(loadState);
-
-    return AppState(
-      todos: [],
-      isDarkMode: true,
-      asksForDeletionConfirmation: true,
-    );
-  }
-
-  @override
-  Future<int?> deleteCompletedTodos() {
-    // TODO: implement deleteCompletedTodos
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<int?> deleteTodo(Todo todo) {
-    // TODO: implement deleteTodo
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<int?> deleteTodos(List<Todo> todos) {
-    // TODO: implement deleteTodos
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<bool?> setDarkMode(bool isDarkMode) {
-    // TODO: implement setDarkMode
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<bool?> toggleTodoCompletion(Todo todo) {
-    // TODO: implement toggleTodoCompletion
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Todo?> updateTodo(Todo todo) {
-    // TODO: implement updateTodo
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<Todo>?> addTodos(List<Todo> todos) async {
-    final added = <Todo>[];
-    for (final todo in todos) {
-      final result = await addTodo(todo);
-      if (result != null) {
-        added.add(result);
-      }
-    }
-    await saveState();
-    return added;
+  Future<Todo?> updateTodo(Todo todo) async {
+    final newTodos = state.todos
+        .map((t) => t.id == todo.id ? todo : t)
+        .toList();
+    state = state.copyWith(todos: newTodos);
+    await _saveState();
+    return todo;
   }
 }

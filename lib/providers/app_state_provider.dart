@@ -40,23 +40,19 @@ abstract class AppStateNotifier extends Notifier<AppState> {
 
   Future<int?> deleteCompletedTodos();
 
-  Future<void> deleteSelectedTodos();
+  Future<int?> deleteSelectedTodos();
 
   Future<int?> deleteTodo(Todo todo);
 
   Future<int?> deleteTodos(List<Todo> todos);
 
-  Future<void> loadState();
-
-  Future<void> saveState();
-
   Future<bool?> setDarkMode(bool isDarkMode);
+
+  Future<bool?> setTodoCompleted(Todo todo, bool isCompleted);
 
   void toggleDeletionConfirmation();
 
   void toggleSelection(String id);
-
-  Future<bool?> toggleTodoCompletion(Todo todo);
 
   Future<Todo?> updateTodo(Todo todo);
 }
