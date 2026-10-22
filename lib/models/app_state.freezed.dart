@@ -11,6 +11,7 @@ part of 'app_state.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$AppState {
 
@@ -21,9 +22,18 @@ mixin _$AppState {
 @pragma('vm:prefer-inline')
 $AppStateCopyWith<AppState> get copyWith => _$AppStateCopyWithImpl<AppState>(this as AppState, _$identity);
 
+  /// Serializes this AppState to a JSON map.
+  Map<String, dynamic> toJson();
 
 
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppState&&const DeepCollectionEquality().equals(other.todos, todos)&&(identical(other.isDarkMode, isDarkMode) || other.isDarkMode == isDarkMode)&&(identical(other.asksForDeletionConfirmation, asksForDeletionConfirmation) || other.asksForDeletionConfirmation == asksForDeletionConfirmation)&&const DeepCollectionEquality().equals(other.selectedTodoIds, selectedTodoIds));
+}
 
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(todos),isDarkMode,asksForDeletionConfirmation,const DeepCollectionEquality().hash(selectedTodoIds));
 
 @override
 String toString() {
@@ -56,7 +66,7 @@ class _$AppStateCopyWithImpl<$Res>
 /// Create a copy of AppState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? todos = null,Object? isDarkMode = null,Object? asksForDeletionConfirmation = null,Object? selectedTodoIds = null,}) {
-  return _then(AppState(
+  return _then(_self.copyWith(
 todos: null == todos ? _self.todos : todos // ignore: cast_nullable_to_non_nullable
 as List<Todo>,isDarkMode: null == isDarkMode ? _self.isDarkMode : isDarkMode // ignore: cast_nullable_to_non_nullable
 as bool,asksForDeletionConfirmation: null == asksForDeletionConfirmation ? _self.asksForDeletionConfirmation : asksForDeletionConfirmation // ignore: cast_nullable_to_non_nullable
@@ -82,10 +92,11 @@ extension AppStatePatterns on AppState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _AppState value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _:
+case _AppState() when $default != null:
+return $default(_that);case _:
   return orElse();
 
 }
@@ -103,10 +114,11 @@ case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _AppState value)  $default,){
 final _that = this;
 switch (_that) {
-case _:
+case _AppState():
+return $default(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -123,10 +135,11 @@ case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _AppState value)?  $default,){
 final _that = this;
 switch (_that) {
-case _:
+case _AppState() when $default != null:
+return $default(_that);case _:
   return null;
 
 }
@@ -143,9 +156,10 @@ case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Todo> todos,  bool isDarkMode,  bool asksForDeletionConfirmation,  Set<String> selectedTodoIds)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _:
+case _AppState() when $default != null:
+return $default(_that.todos,_that.isDarkMode,_that.asksForDeletionConfirmation,_that.selectedTodoIds);case _:
   return orElse();
 
 }
@@ -163,9 +177,10 @@ case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>() {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Todo> todos,  bool isDarkMode,  bool asksForDeletionConfirmation,  Set<String> selectedTodoIds)  $default,) {final _that = this;
 switch (_that) {
-case _:
+case _AppState():
+return $default(_that.todos,_that.isDarkMode,_that.asksForDeletionConfirmation,_that.selectedTodoIds);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -182,13 +197,101 @@ case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>() {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Todo> todos,  bool isDarkMode,  bool asksForDeletionConfirmation,  Set<String> selectedTodoIds)?  $default,) {final _that = this;
 switch (_that) {
-case _:
+case _AppState() when $default != null:
+return $default(_that.todos,_that.isDarkMode,_that.asksForDeletionConfirmation,_that.selectedTodoIds);case _:
   return null;
 
 }
 }
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _AppState implements AppState {
+  const _AppState({final  List<Todo> todos = const [], this.isDarkMode = true, this.asksForDeletionConfirmation = true, final  Set<String> selectedTodoIds = const {}}): _todos = todos,_selectedTodoIds = selectedTodoIds;
+  factory _AppState.fromJson(Map<String, dynamic> json) => _$AppStateFromJson(json);
+
+ final  List<Todo> _todos;
+@override@JsonKey() List<Todo> get todos {
+  if (_todos is EqualUnmodifiableListView) return _todos;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_todos);
+}
+
+@override@JsonKey() final  bool isDarkMode;
+@override@JsonKey() final  bool asksForDeletionConfirmation;
+ final  Set<String> _selectedTodoIds;
+@override@JsonKey() Set<String> get selectedTodoIds {
+  if (_selectedTodoIds is EqualUnmodifiableSetView) return _selectedTodoIds;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableSetView(_selectedTodoIds);
+}
+
+
+/// Create a copy of AppState
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$AppStateCopyWith<_AppState> get copyWith => __$AppStateCopyWithImpl<_AppState>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$AppStateToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppState&&const DeepCollectionEquality().equals(other._todos, _todos)&&(identical(other.isDarkMode, isDarkMode) || other.isDarkMode == isDarkMode)&&(identical(other.asksForDeletionConfirmation, asksForDeletionConfirmation) || other.asksForDeletionConfirmation == asksForDeletionConfirmation)&&const DeepCollectionEquality().equals(other._selectedTodoIds, _selectedTodoIds));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_todos),isDarkMode,asksForDeletionConfirmation,const DeepCollectionEquality().hash(_selectedTodoIds));
+
+@override
+String toString() {
+  return 'AppState(todos: $todos, isDarkMode: $isDarkMode, asksForDeletionConfirmation: $asksForDeletionConfirmation, selectedTodoIds: $selectedTodoIds)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$AppStateCopyWith<$Res> implements $AppStateCopyWith<$Res> {
+  factory _$AppStateCopyWith(_AppState value, $Res Function(_AppState) _then) = __$AppStateCopyWithImpl;
+@override @useResult
+$Res call({
+ List<Todo> todos, bool isDarkMode, bool asksForDeletionConfirmation, Set<String> selectedTodoIds
+});
+
+
+
+
+}
+/// @nodoc
+class __$AppStateCopyWithImpl<$Res>
+    implements _$AppStateCopyWith<$Res> {
+  __$AppStateCopyWithImpl(this._self, this._then);
+
+  final _AppState _self;
+  final $Res Function(_AppState) _then;
+
+/// Create a copy of AppState
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? todos = null,Object? isDarkMode = null,Object? asksForDeletionConfirmation = null,Object? selectedTodoIds = null,}) {
+  return _then(_AppState(
+todos: null == todos ? _self._todos : todos // ignore: cast_nullable_to_non_nullable
+as List<Todo>,isDarkMode: null == isDarkMode ? _self.isDarkMode : isDarkMode // ignore: cast_nullable_to_non_nullable
+as bool,asksForDeletionConfirmation: null == asksForDeletionConfirmation ? _self.asksForDeletionConfirmation : asksForDeletionConfirmation // ignore: cast_nullable_to_non_nullable
+as bool,selectedTodoIds: null == selectedTodoIds ? _self._selectedTodoIds : selectedTodoIds // ignore: cast_nullable_to_non_nullable
+as Set<String>,
+  ));
+}
+
 
 }
 

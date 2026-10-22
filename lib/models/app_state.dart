@@ -7,9 +7,12 @@ part 'app_state.g.dart';
 @freezed
 abstract class AppState with _$AppState {
   const factory AppState({
-    final List<Todo> todos;
-  final bool isDarkMode;
-  final bool asksForDeletionConfirmation;
-  final Set<String> selectedTodoIds;
-  });
+    @Default([]) List<Todo> todos,
+    @Default(true) bool isDarkMode,
+    @Default(true) bool asksForDeletionConfirmation,
+    @Default({}) Set<String> selectedTodoIds,
+  }) = _AppState;
+
+  factory AppState.fromJson(Map<String, dynamic> json) =>
+      _$AppStateFromJson(json);
 }
