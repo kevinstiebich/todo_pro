@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'app_state.dart';
@@ -9,13 +9,14 @@ part of 'app_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$AppState {
 
- List<Todo> get todos; bool get isDarkMode; bool get asksForDeletionConfirmation; Set<String> get selectedTodoIds;
+ List<Todo> get todos; bool get isDarkMode; bool get asksForDeletionConfirmation;@JsonKey(includeFromJson: false, includeToJson: false) Set<String> get selectedTodoIds;
 /// Create a copy of AppState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +49,7 @@ abstract mixin class $AppStateCopyWith<$Res>  {
   factory $AppStateCopyWith(AppState value, $Res Function(AppState) _then) = _$AppStateCopyWithImpl;
 @useResult
 $Res call({
- List<Todo> todos, bool isDarkMode, bool asksForDeletionConfirmation, Set<String> selectedTodoIds
+ List<Todo> todos, bool isDarkMode, bool asksForDeletionConfirmation,@JsonKey(includeFromJson: false, includeToJson: false) Set<String> selectedTodoIds
 });
 
 
@@ -66,7 +67,7 @@ class _$AppStateCopyWithImpl<$Res>
 /// Create a copy of AppState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? todos = null,Object? isDarkMode = null,Object? asksForDeletionConfirmation = null,Object? selectedTodoIds = null,}) {
-  return _then(_self.copyWith(
+  return _then(AppState(
 todos: null == todos ? _self.todos : todos // ignore: cast_nullable_to_non_nullable
 as List<Todo>,isDarkMode: null == isDarkMode ? _self.isDarkMode : isDarkMode // ignore: cast_nullable_to_non_nullable
 as bool,asksForDeletionConfirmation: null == asksForDeletionConfirmation ? _self.asksForDeletionConfirmation : asksForDeletionConfirmation // ignore: cast_nullable_to_non_nullable
@@ -156,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Todo> todos,  bool isDarkMode,  bool asksForDeletionConfirmation,  Set<String> selectedTodoIds)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Todo> todos,  bool isDarkMode,  bool asksForDeletionConfirmation, @JsonKey(includeFromJson: false, includeToJson: false)  Set<String> selectedTodoIds)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AppState() when $default != null:
 return $default(_that.todos,_that.isDarkMode,_that.asksForDeletionConfirmation,_that.selectedTodoIds);case _:
@@ -177,7 +178,7 @@ return $default(_that.todos,_that.isDarkMode,_that.asksForDeletionConfirmation,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Todo> todos,  bool isDarkMode,  bool asksForDeletionConfirmation,  Set<String> selectedTodoIds)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Todo> todos,  bool isDarkMode,  bool asksForDeletionConfirmation, @JsonKey(includeFromJson: false, includeToJson: false)  Set<String> selectedTodoIds)  $default,) {final _that = this;
 switch (_that) {
 case _AppState():
 return $default(_that.todos,_that.isDarkMode,_that.asksForDeletionConfirmation,_that.selectedTodoIds);case _:
@@ -197,7 +198,7 @@ return $default(_that.todos,_that.isDarkMode,_that.asksForDeletionConfirmation,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Todo> todos,  bool isDarkMode,  bool asksForDeletionConfirmation,  Set<String> selectedTodoIds)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Todo> todos,  bool isDarkMode,  bool asksForDeletionConfirmation, @JsonKey(includeFromJson: false, includeToJson: false)  Set<String> selectedTodoIds)?  $default,) {final _that = this;
 switch (_that) {
 case _AppState() when $default != null:
 return $default(_that.todos,_that.isDarkMode,_that.asksForDeletionConfirmation,_that.selectedTodoIds);case _:
@@ -212,7 +213,7 @@ return $default(_that.todos,_that.isDarkMode,_that.asksForDeletionConfirmation,_
 @JsonSerializable()
 
 class _AppState implements AppState {
-  const _AppState({final  List<Todo> todos = const [], this.isDarkMode = true, this.asksForDeletionConfirmation = true, final  Set<String> selectedTodoIds = const {}}): _todos = todos,_selectedTodoIds = selectedTodoIds;
+  const _AppState({ List<Todo> todos = const [], this.isDarkMode = true, this.asksForDeletionConfirmation = true, @JsonKey(includeFromJson: false, includeToJson: false)  Set<String> selectedTodoIds = const {}}): _todos = todos,_selectedTodoIds = selectedTodoIds;
   factory _AppState.fromJson(Map<String, dynamic> json) => _$AppStateFromJson(json);
 
  final  List<Todo> _todos;
@@ -225,7 +226,7 @@ class _AppState implements AppState {
 @override@JsonKey() final  bool isDarkMode;
 @override@JsonKey() final  bool asksForDeletionConfirmation;
  final  Set<String> _selectedTodoIds;
-@override@JsonKey() Set<String> get selectedTodoIds {
+@override@JsonKey(includeFromJson: false, includeToJson: false) Set<String> get selectedTodoIds {
   if (_selectedTodoIds is EqualUnmodifiableSetView) return _selectedTodoIds;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableSetView(_selectedTodoIds);
@@ -265,7 +266,7 @@ abstract mixin class _$AppStateCopyWith<$Res> implements $AppStateCopyWith<$Res>
   factory _$AppStateCopyWith(_AppState value, $Res Function(_AppState) _then) = __$AppStateCopyWithImpl;
 @override @useResult
 $Res call({
- List<Todo> todos, bool isDarkMode, bool asksForDeletionConfirmation, Set<String> selectedTodoIds
+ List<Todo> todos, bool isDarkMode, bool asksForDeletionConfirmation,@JsonKey(includeFromJson: false, includeToJson: false) Set<String> selectedTodoIds
 });
 
 

@@ -15,16 +15,10 @@ _AppState _$AppStateFromJson(Map<String, dynamic> json) => _AppState(
   isDarkMode: json['isDarkMode'] as bool? ?? true,
   asksForDeletionConfirmation:
       json['asksForDeletionConfirmation'] as bool? ?? true,
-  selectedTodoIds:
-      (json['selectedTodoIds'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toSet() ??
-      const {},
 );
 
 Map<String, dynamic> _$AppStateToJson(_AppState instance) => <String, dynamic>{
   'todos': instance.todos,
   'isDarkMode': instance.isDarkMode,
   'asksForDeletionConfirmation': instance.asksForDeletionConfirmation,
-  'selectedTodoIds': instance.selectedTodoIds.toList(),
 };
