@@ -3,10 +3,11 @@ import 'package:i12_into_012/models/app_state.dart';
 import 'package:i12_into_012/models/todo.dart';
 import 'package:i12_into_012/providers/local_json_notifier.dart';
 import 'package:i12_into_012/services/storage_service.dart';
+import 'package:i12_into_012/providers/sqflite_notifier.dart';
 
 // App state notifier provider
 final appStateProvider = NotifierProvider<AppStateNotifier, AppState>(() {
-  return LocalJsonNotifier();
+  return SqfliteNotifier();
 });
 
 final hasSelectedTodosProvider = Provider<bool>((ref) {
