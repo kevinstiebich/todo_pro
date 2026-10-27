@@ -1,7 +1,6 @@
 import 'package:i12_into_012/models/app_state.dart';
 import 'package:i12_into_012/models/todo.dart';
 import 'package:i12_into_012/providers/app_state_provider.dart';
-import 'package:i12_into_012/services/storage_service.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -123,24 +122,26 @@ class SqfliteNotifier extends AppStateNotifier {
   }
 
   Future<int?> deleteSelectedTodos() async {
-    // ################### UNFERTIG ##########################################################
     if (state.selectedTodoIds.isEmpty) return 0;
 
+    int count = 0;
     final db = await _database;
-    int count = await db.delete('todos', where: 'id = ?', whereArgs: []);
 
-    final oldLength = state.selectedTodoIds.length;
+    for (final i in state.selectedTodoIds) {
+      await db.delete('todos', where: 'id = ?', whereArgs: [i]);
+      count++;
+    }
+
     final remainingTodos = state.todos
         .where((todo) => !state.selectedTodoIds.contains(todo.id))
         .toList();
-    final newLength = remainingTodos.length;
 
     state = state.copyWith(
       todos: remainingTodos,
       selectedTodoIds: {},
     );
 
-    return oldLength - newLength;
+    return count;
   }
 
   @override
@@ -157,13 +158,15 @@ class SqfliteNotifier extends AppStateNotifier {
 
   @override
   Future<int?> deleteTodos(List<Todo> todos) async {
-    final todoIds = todos.map((t) => t.id).toList();
-    final oldLength = state.todos.length;
-    final newTodos = state.todos.where((t) => !todoIds.contains(t.id)).toList();
-    final newLength = newTodos.length;
+    int removed = 0;
+    for (final todo in todos) {
+      final result = await deleteTodo(todo);
+      if (result != null) {
+        removed++;
+      }
+    }
 
-    state = state.copyWith(todos: newTodos);
-    return oldLength - newLength;
+    return removed;
   }
 
   @override
